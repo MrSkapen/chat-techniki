@@ -1,0 +1,65 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<h1 class="mt-4" id="result"> <%= result %>
+</h1> 
+<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<p id="message_show"></p>
+<ul>
+  <% if(message!=null) { %>
+    <table>
+      <tr>
+        <th>Name:</th>
+      </tr>
+      <% message.forEach(function(item){ %>
+        <tr>
+          <td>
+            <%= item.from%>
+              <%= item.message%>
+          </td>
+        </tr>
+        <% }) %>
+    </table>
+    <% } %>
+</ul>
+<script>
+  $(document).ready(function () {
+    $('.btn-primary').click(function (e) {
+      e.preventDefault();
+      var data = {};
+      data.message = document.getElementById('message').value;
+      console.log('sending', data)
+      fetch('/send/<%= to %>', {
+        method: 'POST',
+        headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       },
+        body: JSON.stringify(data)
+      }).then(stream => stream.json())
+        .then((response) => {
+          document.getElementById("message_show").innerHTML=response.message[0].message;
+          console.log(response);
+          $('#contactform')[0].reset();
+        })
+    });
+  });
+
+
+  function startShowingMessage(){
+    setInterval(async function(){
+      const response = await fetch('/refresh/<%= to %>');
+      const text = await response.json();
+      var length = text.message.length;
+      console.log(length);
+      console.log(text.message);
+    },1000);
+  }
+  startShowingMessage();
+
+
+</script>
+<form method="post" action="" id="contactform">
+  <div class="form-group">
+    <input type="text" id="message" name="message" class="form-control" placeholder="Type your message here" />
+    </div>
+    <button type=" submit" class="btn btn-primary">Submit</button>
+</form>
