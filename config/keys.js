@@ -1,5 +1,4 @@
-dbPassword = 'mongodb+srv://user01:'+ encodeURIComponent('Banana12!') + '@cluster0.y4l5z.mongodb.net/test?retryWrites=true';
-
+dbPassword = 'mongodb+srv://user01:'+ encodeURIComponent(process.env.DBPass) + '@cluster0.y4l5z.mongodb.net/test?retryWrites=true';
 module.exports = {
     mongoURI: dbPassword
 };
