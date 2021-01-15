@@ -337,23 +337,24 @@ body {
 }
 </style>
 
-<p class="lead mb-3">Welcome <%= user.name %></p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
-
 <div class="wrapper">
   <div class="wrapper_container">
   <!-- start content -->
     <div class="site-wrapper active" id="target">
       <div class="site-wrapper_left-col">
-        <a href="#" class="logo">Logo</a>
+        <a href="#" class="logo"><%= user.name %></a>
         <div class="left-nav">
-          <a href="#"><i class="fa fa-home"></i>Home</a>
+          <a href="/users/logout" class="active"><i class="fa fa-home"></i>Logout</a>
           <% if(details!=null) { %>
             <% details.forEach(function(item){ %>
-              <a href="/chat/<%= item.email%>"><i class="fa fa-pie-chart"></i><%= item.name%></a>
+              <%if(item.status != true){ %>
+              <a href="/chat/<%= item._id%>">  <img style="width: 8%; height: 8%;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Ski_trail_rating_symbol-green_circle.svg/600px-Ski_trail_rating_symbol-green_circle.svg.png"><i class="fa fa-pie-chart"></i> <%= item.name%></a>
+              <%}else{ %>
+                <a href="/chat/<%= item._id%>"><i class="fa fa-pie-chart"></i><%= item.name%></a>
+              <%}%>
             <% }) %>
           <% } %>
-          <a href="#" class="active"><i class="fa fa-user"></i>Profile</a>
+          <a href="#" ><i class="fa fa-user"></i>Profile</a>
         </div>
       </div>
       <div class="site-wrapper_top-bar">
