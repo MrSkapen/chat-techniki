@@ -414,10 +414,9 @@ input[type=submit]{
       var length = text.message.length;
       if(CentralLength<length){
         if(text.chatter == text.message[length-1].from){
-          document.getElementById("message_show").innerHTML+=('<div style="text-align: left;"><b style="color: #00c2db;"">'+text.profile+":</b> " +text.message[length-1].message+"</div> ");
+          document.getElementById("message_show").innerHTML+=('<p style="text-align: left;"><b style="color: #00c2db;"">'+text.profile+":</b> " +text.message[length-1].message+"</p> ");
         }else{
-          
-          document.getElementById("message_show").innerHTML+=('<p style="text-align: right; background: red; width: auto;">' +text.message[length-1].message+' :<b>'+text.user.name+'</b></p>');
+          document.getElementById("message_show").innerHTML+=('<p style="text-align: right; width: auto;">' +text.message[length-1].message+' <b>'+'</b></p>');
         }
         
         CentralLength = length;
