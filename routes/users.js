@@ -7,10 +7,10 @@ const User = require('../models/User');
 const { forwardAuthenticated } = require('../config/auth');
 
 // Login Page
-router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
+router.get('/login', forwardAuthenticated, (req, res) => res.render('welcome'));
 
 // Register Page
-router.get('/register', forwardAuthenticated, (req, res) => res.render('register'));
+router.get('/register', forwardAuthenticated, (req, res) => res.render('welcome'));
 
 // Register
 router.post('/register', (req, res) => {
@@ -52,7 +52,8 @@ router.post('/register', (req, res) => {
         const newUser = new User({
           name,
           email,
-          password
+          password,
+          status: true
         });
 
         bcrypt.genSalt(10, (err, salt) => {
@@ -79,14 +80,17 @@ router.post('/register', (req, res) => {
 // Login
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: '/dashboard',
+    successRedirect: '/home',
     failureRedirect: '/users/login',
     failureFlash: true
   })(req, res, next);
 });
 
 // Logout
-router.get('/logout', (req, res) => {
+router.get('/logout', async function (req, res){
+  var myquery = { _id: req.user._id};
+  var newvalue = { $set: {status: false}};
+  var change =  await User.updateOne(myquery, newvalue);
   req.logout();
   req.flash('success_msg', 'You are logged out');
   res.redirect('/users/login');
