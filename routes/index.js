@@ -53,7 +53,7 @@ router.get('/chat/:id', async function (req, res) {
   User.find({ }, function(err, allDetails){
     details = allDetails;``
   });
-  User.find({ email: chatter }, function(err, data){
+  User.find({ _id: chatter }, function(err, data){
     profile = data[0].name;
   });
   Message.find({ $or: [{ $and: [{ from: req.user.email }, { to: chatter }] }, { $and: [{ from: chatter }, { to: req.user.email }] }] }, function (err, message) {
@@ -64,7 +64,7 @@ router.get('/chat/:id', async function (req, res) {
 router.get('/refresh/:id', function (req, res) {
   var profile = " ";
   var chatter = req.params.id;
-  User.find({ email: chatter }, function (err, data) {
+  User.find({ _id: chatter }, function (err, data) {
     profile = data[0].name;
   });
   Message.find({ $or: [{ $and: [{ from: req.user.email }, { to: chatter }] }, { $and: [{ from: chatter }, { to: req.user.email }] }] }, function (err, message) {
@@ -77,7 +77,7 @@ router.post('/send/:id', async (req, res) => {
   var chatter = req.params.id;
   try {
     var profile = " ";
-    User.find({ email: chatter }, function (err, data) {
+    User.find({ _id: chatter }, function (err, data) {
       profile = data[0].name;
     });
     var message = new Message({ from: req.user.email, to: chatter, message: req.body.message });
