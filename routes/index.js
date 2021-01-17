@@ -20,12 +20,10 @@ const Message = require('../models/Message');
 // Welcome Page
 router.get('/', forwardAuthenticated, (req, res) => res.render('welcome'));
 
-
-
-router.get('/home', ensureAuthenticated, (req, res) =>{
+router.get('/home', ensureAuthenticated, async function (req, res){
 var myquery = { _id: req.user._id};
-var newvalue = { $set: {status: true} };
-User.updateOne(myquery, newvalue);
+var newvalue = { $set: {status: true}};
+var change =  await User.updateOne(myquery, newvalue);
 User.find({}, function (err, allDetails) {
   if (err) {
     console.log(err);
@@ -67,7 +65,7 @@ router.get('/refresh/:id', function (req, res) {
   User.find({ _id: chatter }, function (err, data) {
     profile = data[0].name;
   });
-  Message.find({ $or: [{ $and: [{ from: req.user.email }, { to: chatter }] }, { $and: [{ from: chatter }, { to: req.user.email }] }] }, function (err, message) {
+  Message.find({ $or: [{ $and: [{ from: req.user._id }, { to: chatter }] }, { $and: [{ from: chatter }, { to: req.user._id }] }] }, function (err, message) {
     var data = { profile, message, chatter, user: req.user };
       res.send(data);
   })
@@ -80,9 +78,9 @@ router.post('/send/:id', async (req, res) => {
     User.find({ _id: chatter }, function (err, data) {
       profile = data[0].name;
     });
-    var message = new Message({ from: req.user.email, to: chatter, message: req.body.message });
+    var message = new Message({ from: req.user._id, to: chatter, message: req.body.message });
     var savedMessage = await message.save();
-    Message.find({ $or: [{ $and: [{ from: req.user.email }, { to: chatter }] }, { $and: [{ from: chatter }, { to: req.user.email }] }] }, function (err, message) {
+    Message.find({ $or: [{ $and: [{ from: req.user._id }, { to: chatter }] }, { $and: [{ from: chatter }, { to: req.user._id }] }] }, function (err, message) {
       var data = { profile, message, chatter };
       res.setHeader("Content-Type", "text/html");
       res.send(data);

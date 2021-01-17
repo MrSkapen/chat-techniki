@@ -347,7 +347,7 @@ body {
           <a href="/users/logout" class="active"><i class="fa fa-home"></i>Logout</a>
           <% if(details!=null) { %>
             <% details.forEach(function(item){ %>
-              <%if(item.status != true){ %>
+              <%if(item.status == true){ %>
               <a href="/chat/<%= item._id%>">  <img style="width: 8%; height: 8%;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Ski_trail_rating_symbol-green_circle.svg/600px-Ski_trail_rating_symbol-green_circle.svg.png"><i class="fa fa-pie-chart"></i> <%= item.name%></a>
               <%}else{ %>
                 <a href="/chat/<%= item._id%>"><i class="fa fa-pie-chart"></i><%= item.name%></a>
